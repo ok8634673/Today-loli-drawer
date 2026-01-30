@@ -1,0 +1,2946 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天看哪位可爱小萝莉</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff8fab;
+            --secondary-color: #fb6f92;
+            --accent-color: #ffc2d1;
+            --bg-color: #fff9fb;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #ffe5ec;
+            --shadow-color: rgba(255, 143, 171, 0.2);
+            --success-color: #a7c957;
+            --warning-color: #ff9e00;
+            --danger-color: #ff5d8f;
+            --bilibili-color: #fb7299;
+            --douyin-color: #000000;
+            --xiaohongshu-color: #ff2442;
+            --kuaishou-color: #ff5000;
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary-color: #ff8fab;
+            --secondary-color: #fb6f92;
+            --accent-color: #643843;
+            --bg-color: #1a1a2e;
+            --card-color: #16213e;
+            --text-color: #f0f0f0;
+            --border-color: #2d4059;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --success-color: #8ac926;
+            --warning-color: #ffb703;
+            --danger-color: #ff5d8f;
+            --bilibili-color: #fb7299;
+            --douyin-color: #ffffff;
+            --xiaohongshu-color: #ff2442;
+            --kuaishou-color: #ff5000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px var(--shadow-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            background-color: var(--accent-color);
+            bottom: -5px;
+            left: 0;
+            border-radius: 4px;
+            z-index: -1;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--card-color);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            width: 60px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary-color);
+        }
+
+        .toggle-circle {
+            width: 22px;
+            height: 22px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            transition: var(--transition);
+            transform: translateX(0);
+        }
+
+        .dark-mode .toggle-circle {
+            transform: translateX(30px);
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-section {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-color);
+        }
+
+        .draw-area {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .animation-theme-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .animation-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .animation-btn:hover {
+            border-color: var(--primary-color);
+        }
+
+        .animation-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .card-display {
+            width: 280px;
+            height: 460px;
+            background: linear-gradient(145deg, var(--accent-color), var(--primary-color));
+            border-radius: 20px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .card-display:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-display img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            z-index: 3;
+            position: relative;
+        }
+
+        .default-avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border: 5px solid white;
+            z-index: 3;
+            position: relative;
+        }
+
+        .default-avatar i {
+            font-size: 5rem;
+            color: var(--primary-color);
+        }
+
+        .card-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin: 10px 0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            z-index: 3;
+            position: relative;
+        }
+
+        .card-info {
+            color: white;
+            font-size: 1.1rem;
+            margin: 5px 0;
+            opacity: 0.9;
+            z-index: 3;
+            position: relative;
+        }
+
+        .platform-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            z-index: 3;
+            position: relative;
+        }
+
+        .platform-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .platform-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .bilibili-btn {
+            background-color: var(--bilibili-color);
+        }
+
+        .douyin-btn {
+            background-color: var(--douyin-color);
+        }
+
+        .xiaohongshu-btn {
+            background-color: var(--xiaohongshu-color);
+        }
+
+        .kuaishou-btn {
+            background-color: var(--kuaishou-color);
+        }
+
+        .other-btn {
+            background-color: var(--secondary-color);
+        }
+
+        .draw-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: var(--transition);
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(255, 143, 171, 0.4);
+            z-index: 3;
+            position: relative;
+        }
+
+        .draw-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 143, 171, 0.5);
+        }
+
+        .draw-btn:active {
+            transform: translateY(0);
+        }
+
+        .draw-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            z-index: 3;
+            position: relative;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .list-management {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--secondary-color);
+        }
+
+        .tab-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .list-item:hover {
+            background-color: var(--bg-color);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 2px solid var(--border-color);
+        }
+
+        .default-small-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border-color);
+        }
+
+        .default-small-avatar i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .item-info {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .item-platforms {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .platform-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            background-color: var(--bg-color);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: var(--transition);
+            font-size: 1.1rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background-color: var(--border-color);
+            color: var(--primary-color);
+        }
+
+        .btn-special {
+            color: var(--warning-color);
+        }
+
+        .btn-remove {
+            color: var(--danger-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .platform-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .platform-input-group select {
+            flex: 1;
+        }
+
+        .platform-input-group input {
+            flex: 2;
+        }
+
+        .remove-platform {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .add-platform-btn {
+            background-color: var(--bg-color);
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            width: 100%;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-platform-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        .special-info {
+            background-color: var(--accent-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--border-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .probability-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .probability-slider {
+            flex-grow: 1;
+        }
+
+        .probability-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--card-color);
+            color: var(--text-color);
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            border-left: 5px solid var(--primary-color);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* 抽卡动画相关样式 */
+        .animation-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .hearts-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--primary-color);
+            opacity: 0;
+        }
+
+        .rainbow-beam {
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #00ff00, #0099ff, #6600ff);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .stars-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            color: #ffd700;
+            opacity: 0;
+        }
+
+        .card-reveal {
+            animation: cardReveal 1s ease-out forwards;
+        }
+
+        @keyframes cardReveal {
+            0% { transform: scale(0.5) rotateY(180deg); opacity: 0; }
+            100% { transform: scale(1) rotateY(0); opacity: 1; }
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(400px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100px) scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+
+        @keyframes rainbowSweep {
+            0% { left: -100%; opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .drawing {
+            animation: pulse 0.8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .waiting-text {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .waiting-text.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .app {
+                gap: 20px;
+            }
+            
+            .card-section {
+                padding: 20px;
+            }
+            
+            .platform-input-group {
+                flex-direction: column;
+            }
+            
+            .platform-input-group select, .platform-input-group input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heart"></i> 今天看哪位可爱小萝莉</h1>
+            <p class="tagline">随机抽取一位主播，给她送去你的关注吧！</p>
+            <div class="theme-toggle" id="themeToggle">
+                <div class="toggle-circle"></div>
+            </div>
+        </header>
+        
+        <div class="app">
+            <!-- 抽卡区域 -->
+            <div class="card-section draw-area">
+                <h2 class="section-title"><i class="fas fa-star"></i> 随机抽取</h2>
+                
+                <div class="animation-theme-selector">
+                    <div class="animation-btn active" data-animation="confetti">彩色纸屑</div>
+                    <div class="animation-btn" data-animation="hearts">爱心飞舞</div>
+                    <div class="animation-btn" data-animation="sparkles">星光闪耀</div>
+                    <div class="animation-btn" data-animation="rainbow">彩虹光束</div>
+                    <div class="animation-btn" data-animation="stars">梦幻星空</div>
+                </div>
+                
+                <div class="animation-overlay" id="animationOverlay"></div>
+                
+                <div class="card-display" id="cardDisplay">
+                    <div class="default-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="card-name">等待抽取</div>
+                    <div class="card-info">点击下方按钮开始抽卡</div>
+                    <div class="card-info">剩余可抽: <span id="remainingCount">0</span> 人</div>
+                    <div class="platform-buttons" id="platformButtons">
+                        <!-- 平台按钮将通过JS动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="waiting-text" id="waitingText">正在抽取中，请稍候...</div>
+                
+                <button class="draw-btn" id="drawBtn">开始抽卡</button>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalCount">0</div>
+                        <div class="stat-label">总人数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="drawnCount">0</div>
+                        <div class="stat-label">已抽取</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="specialCount">0</div>
+                        <div class="stat-label">特别关注</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 名单管理区域 -->
+            <div class="card-section list-management">
+                <div class="tabs">
+                    <div class="tab active" data-tab="list">主播名单</div>
+                    <div class="tab" data-tab="special">特别关注</div>
+                    <div class="tab" data-tab="drawn">已抽取主播</div>
+                    <div class="tab" data-tab="add">添加主播</div>
+                    <div class="tab" data-tab="import">导入/导出</div>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- 主播名单 -->
+                    <div class="tab-pane active" id="list-pane">
+                        <div class="list-container" id="listContainer">
+                            <!-- 名单项将通过JS动态生成 -->
+                            <div class="empty-state">
+                                <i class="fas fa-users"></i>
+                                <p>主播名单为空，请添加主播</p>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" id="resetDraw">重置抽卡记录</button>
+                            <button class="btn btn-primary" id="clearAll">清空名单</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 特别关注 -->
+                    <div class="tab-pane" id="special-pane">
+                        <div class="list-container" id="specialContainer">
+                            <!-- 特别关注项将通过JS动态生成 -->
+                            <div class="empty-state">
+                                <i class="fas fa-heart"></i>
+                                <p>暂无特别关注的主播</p>
+                            </div>
+                        </div>
+                        <div class="special-info">
+                            <p><i class="fas fa-info-circle"></i> 特别关注的主播会获得额外的抽取概率，概率值可以在添加主播时或编辑主播时设置。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 已抽取主播 -->
+                    <div class="tab-pane" id="drawn-pane">
+                        <div class="list-container" id="drawnContainer">
+                            <!-- 已抽取主播项将通过JS动态生成 -->
+                            <div class="empty-state">
+                                <i class="fas fa-history"></i>
+                                <p>暂无已抽取的主播</p>
+                            </div>
+                        </div>
+                        <div class="special-info">
+                            <p><i class="fas fa-info-circle"></i> 已抽取的主播列表，方便您更新和添加未知主播的主页信息。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 添加主播 -->
+                    <div class="tab-pane" id="add-pane">
+                        <form id="addForm">
+                            <div class="form-group">
+                                <label for="name">主播名称 *</label>
+                                <input type="text" id="name" placeholder="请输入主播名称" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>平台与主页链接</label>
+                                <div id="platformInputs">
+                                    <div class="platform-input-group">
+                                        <select class="platform-select">
+                                            <option value="bilibili">Bilibili</option>
+                                            <option value="douyin">抖音</option>
+                                            <option value="xiaohongshu">小红书</option>
+                                            <option value="kuaishou">快手</option>
+                                            <option value="other">其他</option>
+                                        </select>
+                                        <input type="url" class="platform-url" placeholder="主页链接 (可选)">
+                                        <button type="button" class="remove-platform" disabled>&times;</button>
+                                    </div>
+                                </div>
+                                <button type="button" class="add-platform-btn" id="addPlatformBtn">
+                                    <i class="fas fa-plus"></i> 添加更多平台
+                                </button>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="avatar">头像链接</label>
+                                <input type="url" id="avatar" placeholder="https:// (留空将使用默认头像)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="isSpecial"> 设为特别关注
+                                </label>
+                            </div>
+                            
+                            <div class="form-group" id="probabilityGroup" style="display: none;">
+                                <label>额外概率加成</label>
+                                <div class="probability-control">
+                                    <input type="range" id="probability" min="1" max="10" value="2" class="probability-slider">
+                                    <span class="probability-value" id="probabilityValue">2x</span>
+                                </div>
+                                <p style="font-size: 0.85rem; margin-top: 5px;">设置特别关注主播的抽取概率倍数（1-10倍）</p>
+                            </div>
+                            
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-primary">添加主播</button>
+                                <button type="button" class="btn btn-secondary" id="batchAddBtn">批量添加</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- 导入/导出 -->
+                    <div class="tab-pane" id="import-pane">
+                        <div class="form-group">
+                            <label>从文本导入（每行一个主播）</label>
+                            <textarea id="importText" placeholder="每行格式：主播名称,平台1:链接1,平台2:链接2 (平台支持: bilibili,douyin,xiaohongshu,kuaishou,other)" rows="8"></textarea>
+                            <p style="font-size: 0.85rem; margin-top: 5px;">示例: 小萌酱,bilibili:https://space.bilibili.com/123456,douyin:https://www.douyin.com/user/123456</p>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="btn btn-primary" id="importBtn">导入名单</button>
+                            <button class="btn btn-secondary" id="exportBtn">导出备份</button>
+                            <label for="importBackupFile" class="btn btn-secondary" style="cursor: pointer;">
+                                <i class="fas fa-file-import"></i> 导入备份
+                            </label>
+                            <input type="file" id="importBackupFile" accept=".json" style="display: none;">
+                            <label for="incrementalImportBackupFile" class="btn btn-secondary" style="cursor: pointer;">
+                                <i class="fas fa-file-import"></i> 增量导入备份
+                            </label>
+                            <input type="file" id="incrementalImportBackupFile" accept=".json" style="display: none;">
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>导入B站/抖音关注列表</label>
+                            <p style="font-size: 0.9rem; margin-bottom: 10px;">请将关注的UP主/主播列表复制到下方文本框（每行一个）</p>
+                            <textarea id="platformImportText" placeholder="每行一个主播名称" rows="6"></textarea>
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <select id="platformImportType">
+                                    <option value="bilibili">Bilibili</option>
+                                    <option value="douyin">抖音</option>
+                                    <option value="xiaohongshu">小红书</option>
+                                    <option value="kuaishou">快手</option>
+                                </select>
+                                <button class="btn btn-secondary" id="platformImportBtn">导入平台名单</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>导入整合器导出的名单</label>
+                            <p style="font-size: 0.9rem; margin-bottom: 10px;">请将主播整合器导出的文本复制到下方文本框（支持逗号和顿号分隔）</p>
+                            <textarea id="integratorImportText" placeholder="例如: 张三、李四、王五，赵六，小美" rows="6"></textarea>
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button class="btn btn-secondary" id="integratorImportBtn">导入整合名单</button>
+                            </div>
+                        </div>
+                        
+                        <div class="special-info">
+                            <p><i class="fas fa-download"></i> 导出文件将包含所有主播信息、抽卡记录和设置，文件名包含导出时间。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 《今天看哪位可爱小萝莉》抽卡器 | 数据保存于本地浏览器</p>
+            <p>温馨提示：合理分配时间，健康观看直播</p>
+        </footer>
+    </div>
+    
+    <!-- 模态框（用于编辑主播） -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">编辑主播信息</h3>
+                <button class="close-modal" id="closeEditModal">&times;</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editName">主播名称 *</label>
+                    <input type="text" id="editName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>平台与主页链接</label>
+                    <div id="editPlatformInputs">
+                        <!-- 动态生成平台输入框 -->
+                    </div>
+                    <button type="button" class="add-platform-btn" id="addEditPlatformBtn">
+                        <i class="fas fa-plus"></i> 添加更多平台
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editAvatar">头像链接</label>
+                    <input type="url" id="editAvatar">
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="editIsSpecial"> 设为特别关注
+                    </label>
+                </div>
+                
+                <div class="form-group" id="editProbabilityGroup" style="display: none;">
+                    <label>额外概率加成</label>
+                    <div class="probability-control">
+                        <input type="range" id="editProbability" min="1" max="10" value="2" class="probability-slider">
+                        <span class="probability-value" id="editProbabilityValue">2x</span>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">保存更改</button>
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 批量添加模态框 -->
+    <div class="modal" id="batchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">批量添加主播</h3>
+                <button class="close-modal" id="closeBatchModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>输入主播名称（每行一个）</label>
+                <textarea id="batchNames" placeholder="每行一个主播名称" rows="10"></textarea>
+            </div>
+            <div class="form-group">
+                <label>默认平台</label>
+                <select id="batchPlatform">
+                    <option value="bilibili">Bilibili</option>
+                    <option value="douyin">抖音</option>
+                    <option value="xiaohongshu">小红书</option>
+                    <option value="kuaishou">快手</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" id="confirmBatchAdd">批量添加</button>
+                <button class="btn btn-secondary" id="cancelBatchAdd">取消</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 抽卡结果模态框 -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">抽卡结果</h3>
+                <button class="close-modal" id="closeResultModal">&times;</button>
+            </div>
+            <div style="text-align: center; padding: 20px;">
+                <div id="resultAvatar" style="width: 120px; height: 120px; border-radius: 50%; background-color: var(--accent-color); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-user-circle" style="font-size: 4rem; color: white;"></i>
+                </div>
+                <h2 id="resultName" style="color: var(--primary-color); margin-bottom: 10px;">主播名称</h2>
+                <p id="resultPlatform" style="margin-bottom: 15px;">平台</p>
+                <div id="resultPlatformButtons" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                    <!-- 平台按钮将通过JS动态生成 -->
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="closeResult">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast通知 -->
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        // 应用状态和数据
+        const AppState = {
+            streamers: [],
+            drawnHistory: [],
+            currentRoundDrawn: [],
+            nextId: 1,
+            isDarkMode: false,
+            currentAnimation: 'confetti',
+            
+            // 初始化
+            init() {
+                this.loadFromStorage();
+                this.setupEventListeners();
+                this.renderAll();
+                this.updateStats();
+                this.setupAnimationButtons();
+            },
+            
+            // 从本地存储加载数据
+            loadFromStorage() {
+                const saved = localStorage.getItem('loliDrawerData');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        this.streamers = data.streamers || [];
+                        this.drawnHistory = data.drawnHistory || [];
+                        this.currentRoundDrawn = data.currentRoundDrawn || [];
+                        this.nextId = data.nextId || 1;
+                        this.currentAnimation = data.currentAnimation || 'confetti';
+                        
+                        // 更新主题
+                        this.isDarkMode = data.isDarkMode || false;
+                        if (this.isDarkMode) {
+                            document.body.classList.add('dark-mode');
+                        }
+                        
+                        // 更新动画按钮状态
+                        this.updateAnimationButtons();
+                    } catch (e) {
+                        console.error('加载数据失败:', e);
+                        this.createSampleData();
+                    }
+                } else {
+                    this.createSampleData();
+                }
+            },
+            
+            // 创建示例数据
+            createSampleData() {
+                this.streamers = [
+                    { 
+                        id: 1, 
+                        name: '小萌酱', 
+                        platforms: [
+                            { platform: 'bilibili', url: 'https://space.bilibili.com/123456' },
+                            { platform: 'douyin', url: 'https://www.douyin.com/user/123456' }
+                        ], 
+                        avatar: '', 
+                        isSpecial: true, 
+                        probability: 3, 
+                        drawn: false 
+                    },
+                    { 
+                        id: 2, 
+                        name: '草莓兔', 
+                        platforms: [
+                            { platform: 'douyin', url: 'https://www.douyin.com/user/234567' },
+                            { platform: 'xiaohongshu', url: 'https://www.xiaohongshu.com/user/123456' }
+                        ], 
+                        avatar: '', 
+                        isSpecial: false, 
+                        probability: 1, 
+                        drawn: false 
+                    },
+                    { 
+                        id: 3, 
+                        name: '月光少女', 
+                        platforms: [
+                            { platform: 'bilibili', url: 'https://space.bilibili.com/234567' }
+                        ], 
+                        avatar: '', 
+                        isSpecial: false, 
+                        probability: 1, 
+                        drawn: false 
+                    },
+                    { 
+                        id: 4, 
+                        name: '甜心宝贝', 
+                        platforms: [
+                            { platform: 'kuaishou', url: 'https://www.kuaishou.com/profile/123456' },
+                            { platform: 'douyin', url: 'https://www.douyin.com/user/345678' }
+                        ], 
+                        avatar: '', 
+                        isSpecial: true, 
+                        probability: 2, 
+                        drawn: false 
+                    },
+                    { 
+                        id: 5, 
+                        name: '小狐狸', 
+                        platforms: [
+                            { platform: 'bilibili', url: 'https://space.bilibili.com/345678' },
+                            { platform: 'xiaohongshu', url: 'https://www.xiaohongshu.com/user/234567' }
+                        ], 
+                        avatar: '', 
+                        isSpecial: false, 
+                        probability: 1, 
+                        drawn: false 
+                    },
+                    { 
+                        id: 6, 
+                        name: '棉花糖', 
+                        platforms: [
+                            { platform: 'douyin', url: 'https://www.douyin.com/user/456789' }
+                        ], 
+                        avatar: '', 
+                        isSpecial: false, 
+                        probability: 1, 
+                        drawn: false 
+                    },
+                ];
+                this.nextId = 7;
+            },
+            
+            // 保存数据到本地存储
+            saveToStorage() {
+                const data = {
+                    streamers: this.streamers,
+                    drawnHistory: this.drawnHistory,
+                    currentRoundDrawn: this.currentRoundDrawn,
+                    nextId: this.nextId,
+                    isDarkMode: this.isDarkMode,
+                    currentAnimation: this.currentAnimation
+                };
+                localStorage.setItem('loliDrawerData', JSON.stringify(data));
+            },
+            
+            // 设置事件监听器
+            setupEventListeners() {
+                // 主题切换
+                document.getElementById('themeToggle').addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+                
+                // 标签页切换
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        this.switchTab(tab.dataset.tab);
+                    });
+                });
+                
+                // 特别关注复选框
+                document.getElementById('isSpecial').addEventListener('change', (e) => {
+                    document.getElementById('probabilityGroup').style.display = e.target.checked ? 'block' : 'none';
+                });
+                
+                document.getElementById('editIsSpecial').addEventListener('change', (e) => {
+                    document.getElementById('editProbabilityGroup').style.display = e.target.checked ? 'block' : 'none';
+                });
+                
+                // 概率滑块
+                document.getElementById('probability').addEventListener('input', (e) => {
+                    document.getElementById('probabilityValue').textContent = e.target.value + 'x';
+                });
+                
+                document.getElementById('editProbability').addEventListener('input', (e) => {
+                    document.getElementById('editProbabilityValue').textContent = e.target.value + 'x';
+                });
+                
+                // 添加平台按钮
+                document.getElementById('addPlatformBtn').addEventListener('click', () => {
+                    this.addPlatformInput();
+                });
+                
+                document.getElementById('addEditPlatformBtn').addEventListener('click', () => {
+                    this.addEditPlatformInput();
+                });
+                
+                // 抽卡按钮
+                document.getElementById('drawBtn').addEventListener('click', () => {
+                    this.drawStreamer();
+                });
+                
+                // 添加主播表单
+                document.getElementById('addForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addStreamer();
+                });
+                
+                // 批量添加按钮
+                document.getElementById('batchAddBtn').addEventListener('click', () => {
+                    document.getElementById('batchModal').classList.add('active');
+                });
+                
+                // 批量添加确认
+                document.getElementById('confirmBatchAdd').addEventListener('click', () => {
+                    this.batchAddStreamers();
+                });
+                
+                // 批量添加取消
+                document.getElementById('cancelBatchAdd').addEventListener('click', () => {
+                    document.getElementById('batchModal').classList.remove('active');
+                });
+                
+                // 关闭批量添加模态框
+                document.getElementById('closeBatchModal').addEventListener('click', () => {
+                    document.getElementById('batchModal').classList.remove('active');
+                });
+                
+                // 编辑表单
+                document.getElementById('editForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.updateStreamer();
+                });
+                
+                // 关闭编辑模态框
+                document.getElementById('closeEditModal').addEventListener('click', () => {
+                    document.getElementById('editModal').classList.remove('active');
+                });
+                
+                document.getElementById('cancelEdit').addEventListener('click', () => {
+                    document.getElementById('editModal').classList.remove('active');
+                });
+                
+                // 导入按钮
+                document.getElementById('importBtn').addEventListener('click', () => {
+                    this.importFromText();
+                });
+                
+                // 导出按钮
+                document.getElementById('exportBtn').addEventListener('click', () => {
+                    this.exportData();
+                });
+                
+                // 导入备份文件
+                document.getElementById('importBackupFile').addEventListener('change', (event) => {
+                    this.importBackupData(event);
+                });
+                
+                // 增量导入备份文件
+                document.getElementById('incrementalImportBackupFile').addEventListener('change', (event) => {
+                    this.incrementalImportBackupData(event);
+                });
+                
+                // 平台导入按钮
+                document.getElementById('platformImportBtn').addEventListener('click', () => {
+                    this.importFromPlatform();
+                });
+                
+                // 整合器导入按钮
+                document.getElementById('integratorImportBtn').addEventListener('click', () => {
+                    this.importFromIntegrator();
+                });
+                
+                // 重置抽卡记录
+                document.getElementById('resetDraw').addEventListener('click', () => {
+                    if (confirm('确定要重置抽卡记录吗？这将重置所有主播的抽取状态，但不会删除主播数据。')) {
+                        this.resetDrawHistory();
+                    }
+                });
+                
+                // 清空名单
+                document.getElementById('clearAll').addEventListener('click', () => {
+                    if (confirm('确定要清空所有主播名单吗？此操作不可撤销！')) {
+                        this.clearAllStreamers();
+                    }
+                });
+                
+                // 关闭结果模态框
+                document.getElementById('closeResultModal').addEventListener('click', () => {
+                    document.getElementById('resultModal').classList.remove('active');
+                });
+                
+                document.getElementById('closeResult').addEventListener('click', () => {
+                    document.getElementById('resultModal').classList.remove('active');
+                });
+            },
+            
+            // 设置动画按钮
+            setupAnimationButtons() {
+                document.querySelectorAll('.animation-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        // 更新按钮状态
+                        document.querySelectorAll('.animation-btn').forEach(b => {
+                            b.classList.remove('active');
+                        });
+                        e.target.classList.add('active');
+                        
+                        // 更新当前动画
+                        this.currentAnimation = e.target.dataset.animation;
+                        this.saveToStorage();
+                        
+                        this.showToast(`已切换到${e.target.textContent}特效`, 'success');
+                    });
+                });
+                
+                this.updateAnimationButtons();
+            },
+            
+            // 更新动画按钮状态
+            updateAnimationButtons() {
+                document.querySelectorAll('.animation-btn').forEach(btn => {
+                    if (btn.dataset.animation === this.currentAnimation) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            },
+            
+            // 添加平台输入框
+            addPlatformInput(platform = '', url = '', isEdit = false) {
+                const containerId = isEdit ? 'editPlatformInputs' : 'platformInputs';
+                const container = document.getElementById(containerId);
+                
+                const platformGroup = document.createElement('div');
+                platformGroup.className = 'platform-input-group';
+                
+                const platformOptions = [
+                    { value: 'bilibili', text: 'Bilibili' },
+                    { value: 'douyin', text: '抖音' },
+                    { value: 'xiaohongshu', text: '小红书' },
+                    { value: 'kuaishou', text: '快手' },
+                    { value: 'other', text: '其他' }
+                ];
+                
+                const selectHtml = platformOptions.map(opt => 
+                    `<option value="${opt.value}" ${opt.value === platform ? 'selected' : ''}>${opt.text}</option>`
+                ).join('');
+                
+                platformGroup.innerHTML = `
+                    <select class="platform-select">
+                        ${selectHtml}
+                    </select>
+                    <input type="url" class="platform-url" placeholder="主页链接 (可选)" value="${url || ''}">
+                    <button type="button" class="remove-platform">&times;</button>
+                `;
+                
+                // 添加移除按钮事件
+                const removeBtn = platformGroup.querySelector('.remove-platform');
+                removeBtn.addEventListener('click', () => {
+                    platformGroup.remove();
+                });
+                
+                container.appendChild(platformGroup);
+                
+                // 如果只有一个平台输入框，禁用移除按钮
+                this.updateRemoveButtons();
+            },
+            
+            // 更新移除按钮状态
+            updateRemoveButtons() {
+                const platformInputs = document.getElementById('platformInputs');
+                const editPlatformInputs = document.getElementById('editPlatformInputs');
+                
+                [platformInputs, editPlatformInputs].forEach(container => {
+                    if (container) {
+                        const removeButtons = container.querySelectorAll('.remove-platform');
+                        if (removeButtons.length === 1) {
+                            removeButtons[0].disabled = true;
+                        } else {
+                            removeButtons.forEach(btn => {
+                                btn.disabled = false;
+                            });
+                        }
+                    }
+                });
+            },
+            
+            // 添加编辑平台输入框
+            addEditPlatformInput(platform = '', url = '') {
+                this.addPlatformInput(platform, url, true);
+            },
+            
+            // 切换主题
+            toggleTheme() {
+                this.isDarkMode = !this.isDarkMode;
+                document.body.classList.toggle('dark-mode', this.isDarkMode);
+                this.saveToStorage();
+            },
+            
+            // 切换标签页
+            switchTab(tabName) {
+                // 更新标签页
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.tab === tabName) tab.classList.add('active');
+                });
+                
+                // 更新内容区域
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                    if (pane.id === tabName + '-pane') pane.classList.add('active');
+                });
+                
+                // 根据标签页类型重新渲染
+                if (tabName === 'special') {
+                    this.renderSpecialList();
+                } else if (tabName === 'drawn') {
+                    this.renderDrawnList();
+                }
+            },
+            
+            // 添加主播
+            addStreamer() {
+                const name = document.getElementById('name').value.trim();
+                const avatar = document.getElementById('avatar').value.trim();
+                const isSpecial = document.getElementById('isSpecial').checked;
+                const probability = parseInt(document.getElementById('probability').value);
+                
+                // 获取平台数据
+                const platformInputs = document.querySelectorAll('#platformInputs .platform-input-group');
+                const platforms = [];
+                
+                platformInputs.forEach(input => {
+                    const platform = input.querySelector('.platform-select').value;
+                    const url = input.querySelector('.platform-url').value.trim();
+                    if (platform) {
+                        platforms.push({ platform, url });
+                    }
+                });
+                
+                if (!name) {
+                    this.showToast('请输入主播名称', 'warning');
+                    return;
+                }
+                
+                // 检查是否已存在相同名称的主播
+                if (this.streamers.some(s => s.name === name)) {
+                    this.showToast('已存在同名主播', 'warning');
+                    return;
+                }
+                
+                // 检查是否至少有一个平台
+                if (platforms.length === 0) {
+                    this.showToast('请至少添加一个平台', 'warning');
+                    return;
+                }
+                
+                const streamer = {
+                    id: this.nextId++,
+                    name,
+                    platforms,
+                    avatar: avatar || '',
+                    isSpecial,
+                    probability: isSpecial ? probability : 1,
+                    drawn: false
+                };
+                
+                this.streamers.push(streamer);
+                this.saveToStorage();
+                this.renderAll();
+                this.updateStats();
+                
+                // 重置表单
+                document.getElementById('addForm').reset();
+                document.getElementById('probabilityGroup').style.display = 'none';
+                document.getElementById('probabilityValue').textContent = '2x';
+                document.getElementById('probability').value = 2;
+                
+                // 重置平台输入框
+                const platformInputsContainer = document.getElementById('platformInputs');
+                platformInputsContainer.innerHTML = `
+                    <div class="platform-input-group">
+                        <select class="platform-select">
+                            <option value="bilibili">Bilibili</option>
+                            <option value="douyin">抖音</option>
+                            <option value="xiaohongshu">小红书</option>
+                            <option value="kuaishou">快手</option>
+                            <option value="other">其他</option>
+                        </select>
+                        <input type="url" class="platform-url" placeholder="主页链接 (可选)">
+                        <button type="button" class="remove-platform" disabled>&times;</button>
+                    </div>
+                `;
+                
+                // 重新绑定事件
+                const removeBtn = platformInputsContainer.querySelector('.remove-platform');
+                removeBtn.addEventListener('click', () => {
+                    platformInputsContainer.querySelector('.platform-input-group').remove();
+                    this.updateRemoveButtons();
+                });
+                
+                this.showToast(`主播 "${name}" 添加成功`, 'success');
+            },
+            
+            // 批量添加主播
+            batchAddStreamers() {
+                const namesText = document.getElementById('batchNames').value.trim();
+                const platform = document.getElementById('batchPlatform').value;
+                
+                if (!namesText) {
+                    this.showToast('请输入主播名称', 'warning');
+                    return;
+                }
+                
+                const names = namesText.split('\n')
+                    .map(name => name.trim())
+                    .filter(name => name.length > 0);
+                
+                let addedCount = 0;
+                let duplicateCount = 0;
+                
+                names.forEach(name => {
+                    // 检查是否已存在相同名称的主播
+                    if (this.streamers.some(s => s.name === name)) {
+                        duplicateCount++;
+                        return;
+                    }
+                    
+                    const streamer = {
+                        id: this.nextId++,
+                        name,
+                        platforms: [{ platform, url: '' }],
+                        avatar: '',
+                        isSpecial: false,
+                        probability: 1,
+                        drawn: false
+                    };
+                    
+                    this.streamers.push(streamer);
+                    addedCount++;
+                });
+                
+                if (addedCount > 0 || duplicateCount > 0) {
+                    this.saveToStorage();
+                    this.renderAll();
+                    this.updateStats();
+                    
+                    let message = `成功添加 ${addedCount} 个主播`;
+                    if (duplicateCount > 0) {
+                        message += `，跳过 ${duplicateCount} 个重复名称`;
+                    }
+                    
+                    this.showToast(message, 'success');
+                    
+                    // 关闭模态框并清空输入
+                    document.getElementById('batchModal').classList.remove('active');
+                    document.getElementById('batchNames').value = '';
+                } else {
+                    this.showToast('没有成功添加任何主播', 'warning');
+                }
+            },
+            
+            // 编辑主播
+            editStreamer(id) {
+                const streamer = this.streamers.find(s => s.id === id);
+                if (!streamer) return;
+                
+                document.getElementById('editId').value = streamer.id;
+                document.getElementById('editName').value = streamer.name;
+                document.getElementById('editAvatar').value = streamer.avatar;
+                document.getElementById('editIsSpecial').checked = streamer.isSpecial;
+                document.getElementById('editProbability').value = streamer.probability;
+                document.getElementById('editProbabilityValue').textContent = streamer.probability + 'x';
+                document.getElementById('editProbabilityGroup').style.display = streamer.isSpecial ? 'block' : 'none';
+                
+                // 清空平台输入框
+                const editPlatformInputs = document.getElementById('editPlatformInputs');
+                editPlatformInputs.innerHTML = '';
+                
+                // 添加平台输入框
+                if (streamer.platforms && streamer.platforms.length > 0) {
+                    streamer.platforms.forEach(platformData => {
+                        this.addEditPlatformInput(platformData.platform, platformData.url);
+                    });
+                } else {
+                    // 如果没有平台数据，添加一个空输入框
+                    this.addEditPlatformInput();
+                }
+                
+                document.getElementById('editModal').classList.add('active');
+            },
+            
+            // 更新主播信息
+            updateStreamer() {
+                const id = parseInt(document.getElementById('editId').value);
+                const name = document.getElementById('editName').value.trim();
+                const avatar = document.getElementById('editAvatar').value.trim();
+                const isSpecial = document.getElementById('editIsSpecial').checked;
+                const probability = parseInt(document.getElementById('editProbability').value);
+                
+                // 获取平台数据
+                const platformInputs = document.querySelectorAll('#editPlatformInputs .platform-input-group');
+                const platforms = [];
+                
+                platformInputs.forEach(input => {
+                    const platform = input.querySelector('.platform-select').value;
+                    const url = input.querySelector('.platform-url').value.trim();
+                    if (platform) {
+                        platforms.push({ platform, url });
+                    }
+                });
+                
+                if (!name) {
+                    this.showToast('请输入主播名称', 'warning');
+                    return;
+                }
+                
+                // 检查是否已存在相同名称的主播（排除自己）
+                const existing = this.streamers.find(s => s.name === name && s.id !== id);
+                if (existing) {
+                    this.showToast('已存在同名主播', 'warning');
+                    return;
+                }
+                
+                // 检查是否至少有一个平台
+                if (platforms.length === 0) {
+                    this.showToast('请至少添加一个平台', 'warning');
+                    return;
+                }
+                
+                const streamerIndex = this.streamers.findIndex(s => s.id === id);
+                if (streamerIndex === -1) return;
+                
+                this.streamers[streamerIndex] = {
+                    ...this.streamers[streamerIndex],
+                    name,
+                    platforms,
+                    avatar: avatar || '',
+                    isSpecial,
+                    probability: isSpecial ? probability : 1
+                };
+                
+                this.saveToStorage();
+                this.renderAll();
+                this.updateStats();
+                
+                document.getElementById('editModal').classList.remove('active');
+                this.showToast(`主播 "${name}" 更新成功`, 'success');
+            },
+            
+            // 删除主播
+            deleteStreamer(id) {
+                if (!confirm('确定要删除这个主播吗？')) return;
+                
+                const streamerIndex = this.streamers.findIndex(s => s.id === id);
+                if (streamerIndex === -1) return;
+                
+                const streamerName = this.streamers[streamerIndex].name;
+                
+                // 从已抽取列表中移除
+                this.currentRoundDrawn = this.currentRoundDrawn.filter(sId => sId !== id);
+                
+                // 从历史记录中移除
+                this.drawnHistory = this.drawnHistory.filter(record => record.id !== id);
+                
+                // 从主播列表中移除
+                this.streamers.splice(streamerIndex, 1);
+                
+                this.saveToStorage();
+                this.renderAll();
+                this.updateStats();
+                
+                this.showToast(`主播 "${streamerName}" 已删除`, 'success');
+            },
+            
+            // 切换特别关注状态
+            toggleSpecial(id) {
+                const streamerIndex = this.streamers.findIndex(s => s.id === id);
+                if (streamerIndex === -1) return;
+                
+                const streamer = this.streamers[streamerIndex];
+                streamer.isSpecial = !streamer.isSpecial;
+                
+                if (streamer.isSpecial && streamer.probability === 1) {
+                    streamer.probability = 2; // 默认2倍概率
+                } else if (!streamer.isSpecial) {
+                    streamer.probability = 1;
+                }
+                
+                this.saveToStorage();
+                this.renderAll();
+                this.updateStats();
+                
+                const action = streamer.isSpecial ? '设为特别关注' : '取消特别关注';
+                this.showToast(`主播 "${streamer.name}" ${action}`, 'success');
+            },
+            
+            // 抽卡
+            drawStreamer() {
+                // 获取未抽取的主播
+                const availableStreamers = this.streamers.filter(s => !this.currentRoundDrawn.includes(s.id));
+                
+                if (availableStreamers.length === 0) {
+                    this.showToast('所有主播都已抽取完毕，开始新一轮', 'info');
+                    this.currentRoundDrawn = [];
+                    this.renderAll();
+                    this.drawStreamer(); // 重新调用
+                    return;
+                }
+                
+                // 禁用抽卡按钮
+                const drawBtn = document.getElementById('drawBtn');
+                drawBtn.disabled = true;
+                drawBtn.textContent = '抽取中...';
+                
+                // 显示等待文本
+                const waitingText = document.getElementById('waitingText');
+                waitingText.classList.add('show');
+                
+                // 开始抽卡动画
+                this.startDrawAnimation();
+                
+                // 等待动画播放一段时间后再显示结果
+                setTimeout(() => {
+                    // 计算权重：特别关注主播有额外概率
+                    const weights = availableStreamers.map(s => s.probability);
+                    
+                    // 根据权重随机选择
+                    let totalWeight = weights.reduce((a, b) => a + b, 0);
+                    let random = Math.random() * totalWeight;
+                    
+                    let selectedIndex = 0;
+                    for (let i = 0; i < weights.length; i++) {
+                        random -= weights[i];
+                        if (random <= 0) {
+                            selectedIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    const selectedStreamer = availableStreamers[selectedIndex];
+                    
+                    // 更新抽取状态
+                    selectedStreamer.drawn = true;
+                    this.currentRoundDrawn.push(selectedStreamer.id);
+                    this.drawnHistory.push({
+                        id: selectedStreamer.id,
+                        name: selectedStreamer.name,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    this.saveToStorage();
+                    this.updateStats();
+                    this.updateDrawnList();
+                    
+                    // 显示结果
+                    this.showResult(selectedStreamer);
+                    
+                    // 恢复抽卡按钮
+                    drawBtn.disabled = false;
+                    drawBtn.textContent = '开始抽卡';
+                    
+                    // 隐藏等待文本
+                    waitingText.classList.remove('show');
+                    
+                }, 2000); // 2秒后显示结果
+            },
+            
+            // 开始抽卡动画
+            startDrawAnimation() {
+                const overlay = document.getElementById('animationOverlay');
+                overlay.innerHTML = '';
+                
+                // 添加卡片翻转效果
+                const cardDisplay = document.getElementById('cardDisplay');
+                cardDisplay.classList.add('drawing');
+                
+                // 根据当前选择的动画类型播放特效
+                switch (this.currentAnimation) {
+                    case 'confetti':
+                        this.createConfettiEffect(overlay);
+                        break;
+                    case 'hearts':
+                        this.createHeartsEffect(overlay);
+                        break;
+                    case 'sparkles':
+                        this.createSparklesEffect(overlay);
+                        break;
+                    case 'rainbow':
+                        this.createRainbowEffect(overlay);
+                        break;
+                    case 'stars':
+                        this.createStarsEffect(overlay);
+                        break;
+                }
+            },
+            
+            // 创建彩色纸屑效果
+            createConfettiEffect(overlay) {
+                const colors = ['#ff8fab', '#fb6f92', '#ffc2d1', '#a7c957', '#ff9e00', '#ff5d8f', '#8ac926'];
+                
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.top = `${Math.random() * 100}%`;
+                    confetti.style.width = `${Math.random() * 10 + 5}px`;
+                    confetti.style.height = `${Math.random() * 10 + 5}px`;
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    
+                    overlay.appendChild(confetti);
+                    
+                    // 动画
+                    const animationDuration = Math.random() * 2 + 1;
+                    confetti.style.animation = `confettiFall ${animationDuration}s ease-out forwards`;
+                    confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                }
+                
+                // 清理动画元素
+                setTimeout(() => {
+                    overlay.innerHTML = '';
+                }, 3000);
+            },
+            
+            // 创建爱心飞舞效果
+            createHeartsEffect(overlay) {
+                const heartsContainer = document.createElement('div');
+                heartsContainer.className = 'hearts-container';
+                overlay.appendChild(heartsContainer);
+                
+                for (let i = 0; i < 30; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '<i class="fas fa-heart"></i>';
+                    heart.style.left = `${Math.random() * 100}%`;
+                    heart.style.fontSize = `${Math.random() * 20 + 15}px`;
+                    heart.style.color = `hsl(${Math.random() * 60 + 300}, 100%, 70%)`;
+                    
+                    heartsContainer.appendChild(heart);
+                    
+                    // 动画
+                    const animationDuration = Math.random() * 2 + 1;
+                    heart.style.animation = `floatUp ${animationDuration}s ease-out forwards`;
+                    heart.style.animationDelay = `${Math.random() * 0.5}s`;
+                }
+                
+                // 清理动画元素
+                setTimeout(() => {
+                    overlay.innerHTML = '';
+                }, 3000);
+            },
+            
+            // 创建星光闪耀效果
+            createSparklesEffect(overlay) {
+                for (let i = 0; i < 50; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = `${Math.random() * 100}%`;
+                    sparkle.style.top = `${Math.random() * 100}%`;
+                    sparkle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                    
+                    overlay.appendChild(sparkle);
+                    
+                    // 动画
+                    const animationDuration = Math.random() * 1 + 0.5;
+                    sparkle.style.animation = `sparkle ${animationDuration}s ease-in-out infinite`;
+                    sparkle.style.animationDelay = `${Math.random() * 1}s`;
+                }
+                
+                // 清理动画元素
+                setTimeout(() => {
+                    overlay.innerHTML = '';
+                }, 3000);
+            },
+            
+            // 创建彩虹光束效果
+            createRainbowEffect(overlay) {
+                const rainbowBeam = document.createElement('div');
+                rainbowBeam.className = 'rainbow-beam';
+                overlay.appendChild(rainbowBeam);
+                
+                // 动画
+                rainbowBeam.style.animation = `rainbowSweep 1.5s ease-out forwards`;
+                
+                // 清理动画元素
+                setTimeout(() => {
+                    overlay.innerHTML = '';
+                }, 2000);
+            },
+            
+            // 创建梦幻星空效果
+            createStarsEffect(overlay) {
+                const starsContainer = document.createElement('div');
+                starsContainer.className = 'stars-container';
+                overlay.appendChild(starsContainer);
+                
+                for (let i = 0; i < 40; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.innerHTML = '<i class="fas fa-star"></i>';
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    star.style.fontSize = `${Math.random() * 15 + 10}px`;
+                    star.style.color = `hsl(${Math.random() * 60 + 50}, 100%, 70%)`;
+                    
+                    starsContainer.appendChild(star);
+                    
+                    // 动画
+                    const animationDuration = Math.random() * 1.5 + 0.5;
+                    star.style.animation = `twinkle ${animationDuration}s ease-in-out infinite`;
+                    star.style.animationDelay = `${Math.random() * 1}s`;
+                }
+                
+                // 清理动画元素
+                setTimeout(() => {
+                    overlay.innerHTML = '';
+                }, 3000);
+            },
+            
+            // 显示抽卡结果
+            showResult(streamer) {
+                // 停止抽卡动画
+                const cardDisplay = document.getElementById('cardDisplay');
+                cardDisplay.classList.remove('drawing');
+                
+                // 添加卡片揭示动画
+                cardDisplay.classList.add('card-reveal');
+                
+                // 更新结果显示
+                document.getElementById('resultName').textContent = streamer.name;
+                
+                // 设置头像
+                const resultAvatar = document.getElementById('resultAvatar');
+                if (streamer.avatar) {
+                    resultAvatar.innerHTML = `<img src="${streamer.avatar}" alt="${streamer.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                } else {
+                    resultAvatar.innerHTML = `<i class="fas fa-user-circle" style="font-size: 4rem; color: white;"></i>`;
+                }
+                
+                // 生成平台按钮
+                const resultPlatformButtons = document.getElementById('resultPlatformButtons');
+                resultPlatformButtons.innerHTML = '';
+                
+                if (streamer.platforms && streamer.platforms.length > 0) {
+                    streamer.platforms.forEach(platformData => {
+                        if (platformData.url) {
+                            const platformName = this.getPlatformName(platformData.platform);
+                            const platformIcon = this.getPlatformIcon(platformData.platform);
+                            const platformColor = this.getPlatformColor(platformData.platform);
+                            
+                            const button = document.createElement('a');
+                            button.href = platformData.url;
+                            button.target = '_blank';
+                            button.className = `platform-btn ${platformData.platform}-btn`;
+                            button.style.backgroundColor = platformColor;
+                            button.innerHTML = `${platformIcon} ${platformName}`;
+                            
+                            resultPlatformButtons.appendChild(button);
+                        }
+                    });
+                }
+                
+                // 显示结果模态框
+                setTimeout(() => {
+                    document.getElementById('resultModal').classList.add('active');
+                    cardDisplay.classList.remove('card-reveal');
+                }, 500);
+                
+                // 更新卡片显示
+                this.updateCardDisplay(streamer);
+            },
+            
+            // 更新卡片显示
+            updateCardDisplay(streamer) {
+                const cardDisplay = document.getElementById('cardDisplay');
+                
+                // 更新头像
+                if (streamer.avatar) {
+                    cardDisplay.querySelector('.default-avatar').innerHTML = `<img src="${streamer.avatar}" alt="${streamer.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                } else {
+                    cardDisplay.querySelector('.default-avatar').innerHTML = `<i class="fas fa-user-circle" style="font-size: 5rem; color: var(--primary-color);"></i>`;
+                }
+                
+                // 更新名称和信息
+                cardDisplay.querySelector('.card-name').textContent = streamer.name;
+                cardDisplay.querySelectorAll('.card-info')[0].textContent = streamer.platforms.map(p => this.getPlatformName(p.platform)).join(' / ');
+                
+                // 生成平台按钮
+                const platformButtons = document.getElementById('platformButtons');
+                platformButtons.innerHTML = '';
+                
+                if (streamer.platforms && streamer.platforms.length > 0) {
+                    streamer.platforms.forEach(platformData => {
+                        if (platformData.url) {
+                            const platformName = this.getPlatformName(platformData.platform);
+                            const platformIcon = this.getPlatformIcon(platformData.platform);
+                            const platformColor = this.getPlatformColor(platformData.platform);
+                            
+                            const button = document.createElement('a');
+                            button.href = platformData.url;
+                            button.target = '_blank';
+                            button.className = `platform-btn ${platformData.platform}-btn`;
+                            button.style.backgroundColor = platformColor;
+                            button.innerHTML = `${platformIcon} ${platformName}`;
+                            
+                            platformButtons.appendChild(button);
+                        }
+                    });
+                }
+            },
+            
+            // 从文本导入
+            importFromText() {
+                const importText = document.getElementById('importText').value.trim();
+                if (!importText) {
+                    this.showToast('请输入导入数据', 'warning');
+                    return;
+                }
+                
+                const lines = importText.split('\n');
+                let importedCount = 0;
+                let errorCount = 0;
+                
+                lines.forEach(line => {
+                    const parts = line.split(',');
+                    if (parts.length < 2) {
+                        errorCount++;
+                        return;
+                    }
+                    
+                    const name = parts[0].trim();
+                    const platforms = [];
+                    
+                    // 解析平台数据
+                    for (let i = 1; i < parts.length; i++) {
+                        const platformPart = parts[i].trim();
+                        const platformMatch = platformPart.match(/^([^:]+):(.+)$/);
+                        
+                        if (platformMatch) {
+                            const platform = platformMatch[1].trim();
+                            const url = platformMatch[2].trim();
+                            platforms.push({ platform, url });
+                        } else {
+                            // 简单格式：平台名称
+                            platforms.push({ platform: platformPart, url: '' });
+                        }
+                    }
+                    
+                    // 检查是否已存在相同名称的主播
+                    if (this.streamers.some(s => s.name === name)) {
+                        errorCount++;
+                        return;
+                    }
+                    
+                    // 验证平台
+                    const validPlatforms = platforms.filter(p => 
+                        ['bilibili', 'douyin', 'xiaohongshu', 'kuaishou', 'other'].includes(p.platform)
+                    );
+                    
+                    if (validPlatforms.length === 0) {
+                        errorCount++;
+                        return;
+                    }
+                    
+                    const streamer = {
+                        id: this.nextId++,
+                        name,
+                        platforms: validPlatforms,
+                        avatar: '',
+                        isSpecial: false,
+                        probability: 1,
+                        drawn: false
+                    };
+                    
+                    this.streamers.push(streamer);
+                    importedCount++;
+                });
+                
+                if (importedCount > 0) {
+                    this.saveToStorage();
+                    this.renderAll();
+                    this.updateStats();
+                    
+                    let message = `成功导入 ${importedCount} 个主播`;
+                    if (errorCount > 0) {
+                        message += `，${errorCount} 行格式错误或名称重复`;
+                    }
+                    
+                    this.showToast(message, 'success');
+                    document.getElementById('importText').value = '';
+                } else {
+                    this.showToast('没有成功导入任何主播，请检查数据格式', 'error');
+                }
+            },
+            
+            // 从平台导入
+            importFromPlatform() {
+                const importText = document.getElementById('platformImportText').value.trim();
+                const platform = document.getElementById('platformImportType').value;
+                
+                if (!importText) {
+                    this.showToast('请输入主播名称', 'warning');
+                    return;
+                }
+                
+                const names = importText.split('\n')
+                    .map(name => name.trim())
+                    .filter(name => name.length > 0);
+                
+                let importedCount = 0;
+                let duplicateCount = 0;
+                
+                names.forEach(name => {
+                    // 检查是否已存在相同名称的主播
+                    if (this.streamers.some(s => s.name === name)) {
+                        duplicateCount++;
+                        return;
+                    }
+                    
+                    const streamer = {
+                        id: this.nextId++,
+                        name,
+                        platforms: [{ platform, url: '' }],
+                        avatar: '',
+                        isSpecial: false,
+                        probability: 1,
+                        drawn: false
+                    };
+                    
+                    this.streamers.push(streamer);
+                    importedCount++;
+                });
+                
+                if (importedCount > 0) {
+                    this.saveToStorage();
+                    this.renderAll();
+                    this.updateStats();
+                    
+                    let message = `成功导入 ${importedCount} 个主播`;
+                    if (duplicateCount > 0) {
+                        message += `，跳过 ${duplicateCount} 个重复名称`;
+                    }
+                    
+                    this.showToast(message, 'success');
+                    document.getElementById('platformImportText').value = '';
+                } else {
+                    this.showToast('没有成功导入任何主播', 'warning');
+                }
+            },
+            
+            // 从整合器导入（支持逗号和顿号分隔）
+            importFromIntegrator() {
+                const importText = document.getElementById('integratorImportText').value.trim();
+                
+                if (!importText) {
+                    this.showToast('请输入导入数据', 'warning');
+                    return;
+                }
+                
+                // 使用正则表达式分割文本，支持逗号、顿号、空格和换行作为分隔符
+                const names = importText.split(/[,，、\s]+/)
+                    .map(name => name.trim())
+                    .filter(name => name.length > 0);
+                
+                let importedCount = 0;
+                let duplicateCount = 0;
+                
+                names.forEach(name => {
+                    // 检查是否已存在相同名称的主播
+                    if (this.streamers.some(s => s.name === name)) {
+                        duplicateCount++;
+                        return;
+                    }
+                    
+                    const streamer = {
+                        id: this.nextId++,
+                        name,
+                        platforms: [{ platform: 'douyin', url: '' }], // 默认抖音平台
+                        avatar: '',
+                        isSpecial: false,
+                        probability: 1,
+                        drawn: false
+                    };
+                    
+                    this.streamers.push(streamer);
+                    importedCount++;
+                });
+                
+                if (importedCount > 0) {
+                    this.saveToStorage();
+                    this.renderAll();
+                    this.updateStats();
+                    
+                    let message = `成功导入 ${importedCount} 个主播`;
+                    if (duplicateCount > 0) {
+                        message += `，跳过 ${duplicateCount} 个重复名称`;
+                    }
+                    
+                    this.showToast(message, 'success');
+                    document.getElementById('integratorImportText').value = '';
+                } else {
+                    this.showToast('没有成功导入任何主播，可能所有名字都已存在', 'warning');
+                }
+            },
+            
+            // 导出数据
+            exportData() {
+                const data = {
+                    streamers: this.streamers,
+                    drawnHistory: this.drawnHistory,
+                    currentRoundDrawn: this.currentRoundDrawn,
+                    nextId: this.nextId,
+                    exportDate: new Date().toISOString()
+                };
+                
+                const jsonStr = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                // 生成文件名
+                const now = new Date();
+                const dateStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
+                const filename = `loli_drawer_backup_${dateStr}.json`;
+                
+                // 创建下载链接
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                this.showToast(`数据已导出为 ${filename}`, 'success');
+            },
+            
+            // 导入备份数据
+            importBackupData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                if (!file.name.endsWith('.json')) {
+                    this.showToast('请选择有效的 JSON 备份文件', 'warning');
+                    return;
+                }
+                
+                if (!confirm('确定要导入备份数据吗？这将覆盖当前所有数据！')) {
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        // 验证数据格式
+                        if (!data.streamers || !Array.isArray(data.streamers)) {
+                            throw new Error('无效的备份数据格式');
+                        }
+                        
+                        // 更新应用状态
+                        this.streamers = data.streamers || [];
+                        this.drawnHistory = data.drawnHistory || [];
+                        this.currentRoundDrawn = data.currentRoundDrawn || [];
+                        this.nextId = data.nextId || 1;
+                        
+                        // 保存到本地存储
+                        this.saveToStorage();
+                        
+                        // 重新渲染界面
+                        this.renderAll();
+                        this.updateStats();
+                        
+                        this.showToast('备份数据导入成功', 'success');
+                    } catch (error) {
+                        console.error('导入备份失败:', error);
+                        this.showToast('导入备份失败，请检查文件格式', 'error');
+                    } finally {
+                        // 重置文件输入，允许重复选择同一个文件
+                        event.target.value = '';
+                    }
+                };
+                
+                reader.onerror = () => {
+                    this.showToast('读取文件失败', 'error');
+                    event.target.value = '';
+                };
+                
+                reader.readAsText(file);
+            },
+            
+            // 增量导入备份数据（只添加不存在的主播）
+            incrementalImportBackupData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                if (!file.name.endsWith('.json')) {
+                    this.showToast('请选择有效的 JSON 备份文件', 'warning');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        // 验证数据格式
+                        if (!data.streamers || !Array.isArray(data.streamers)) {
+                            throw new Error('无效的备份数据格式');
+                        }
+                        
+                        let addedCount = 0;
+                        let existingCount = 0;
+                        
+                        // 遍历备份文件中的主播
+                        data.streamers.forEach(backupStreamer => {
+                            // 检查是否已存在同名主播
+                            const existingStreamer = this.streamers.find(s => s.name === backupStreamer.name);
+                            
+                            if (!existingStreamer) {
+                                // 添加新主播，使用新的ID
+                                const newStreamer = {
+                                    ...backupStreamer,
+                                    id: this.nextId++
+                                };
+                                
+                                this.streamers.push(newStreamer);
+                                addedCount++;
+                            } else {
+                                existingCount++;
+                            }
+                        });
+                        
+                        // 保存到本地存储
+                        this.saveToStorage();
+                        
+                        // 重新渲染界面
+                        this.renderAll();
+                        this.updateStats();
+                        
+                        // 显示导入结果
+                        if (addedCount > 0) {
+                            this.showToast(`增量导入成功，添加了 ${addedCount} 个新主播，跳过了 ${existingCount} 个已存在的主播`, 'success');
+                        } else {
+                            this.showToast(`没有添加新主播，所有 ${existingCount} 个主播都已存在`, 'info');
+                        }
+                    } catch (error) {
+                        console.error('增量导入备份失败:', error);
+                        this.showToast('增量导入备份失败，请检查文件格式', 'error');
+                    } finally {
+                        // 重置文件输入，允许重复选择同一个文件
+                        event.target.value = '';
+                    }
+                };
+                
+                reader.onerror = () => {
+                    this.showToast('读取文件失败', 'error');
+                    event.target.value = '';
+                };
+                
+                reader.readAsText(file);
+            },
+            
+            // 重置抽卡记录
+            resetDrawHistory() {
+                this.currentRoundDrawn = [];
+                this.drawnHistory = [];
+                
+                // 重置所有主播的抽取状态
+                this.streamers.forEach(s => {
+                    s.drawn = false;
+                });
+                
+                this.saveToStorage();
+                this.renderAll();
+                this.updateStats();
+                
+                // 重置卡片显示
+                const cardDisplay = document.getElementById('cardDisplay');
+                cardDisplay.querySelector('.default-avatar').innerHTML = '<i class="fas fa-user-circle"></i>';
+                cardDisplay.querySelector('.card-name').textContent = '等待抽取';
+                cardDisplay.querySelectorAll('.card-info')[0].textContent = '点击下方按钮开始抽卡';
+                document.getElementById('platformButtons').innerHTML = '';
+                
+                this.showToast('抽卡记录已重置', 'success');
+            },
+            
+            // 清空所有主播
+            clearAllStreamers() {
+                this.streamers = [];
+                this.currentRoundDrawn = [];
+                this.drawnHistory = [];
+                this.nextId = 1;
+                
+                this.saveToStorage();
+                this.renderAll();
+                this.updateStats();
+                
+                this.showToast('所有主播已清空', 'success');
+            },
+            
+            // 渲染所有列表
+            renderAll() {
+                this.renderStreamerList();
+                this.renderSpecialList();
+                this.updateStats();
+                
+                // 更新抽卡按钮状态
+                const drawBtn = document.getElementById('drawBtn');
+                drawBtn.disabled = this.streamers.length === 0;
+            },
+            
+            // 渲染主播列表
+            renderStreamerList() {
+                const listContainer = document.getElementById('listContainer');
+                
+                if (this.streamers.length === 0) {
+                    listContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <p>主播名单为空，请添加主播</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                
+                this.streamers.forEach(streamer => {
+                    const isDrawn = this.currentRoundDrawn.includes(streamer.id);
+                    
+                    // 生成平台标签
+                    let platformTags = '';
+                    if (streamer.platforms && streamer.platforms.length > 0) {
+                        platformTags = streamer.platforms.map(p => {
+                            const platformIcon = this.getPlatformIcon(p.platform);
+                            const platformName = this.getPlatformName(p.platform);
+                            return `<span class="platform-tag">${platformIcon} ${platformName}</span>`;
+                        }).join('');
+                    }
+                    
+                    html += `
+                        <div class="list-item ${isDrawn ? 'drawn' : ''}">
+                            ${streamer.avatar ? 
+                                `<img src="${streamer.avatar}" alt="${streamer.name}" class="item-avatar">` : 
+                                `<div class="default-small-avatar"><i class="fas fa-user-circle"></i></div>`
+                            }
+                            <div class="item-info">
+                                <div class="item-name">${streamer.name} ${isDrawn ? '<span style="color: var(--danger-color); font-size: 0.8rem;">(已抽)</span>' : ''}</div>
+                                <div class="item-platforms">${platformTags} ${streamer.isSpecial ? '<i class="fas fa-heart" style="color: var(--warning-color);"></i>' : ''}</div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn btn-special" onclick="AppState.toggleSpecial(${streamer.id})" title="${streamer.isSpecial ? '取消特别关注' : '设为特别关注'}">
+                                    <i class="fas ${streamer.isSpecial ? 'fa-heart' : 'fa-heart-circle-plus'}"></i>
+                                </button>
+                                <button class="action-btn" onclick="AppState.editStreamer(${streamer.id})" title="编辑">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-remove" onclick="AppState.deleteStreamer(${streamer.id})" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                listContainer.innerHTML = html;
+            },
+            
+            // 渲染特别关注列表
+            renderSpecialList() {
+                const specialContainer = document.getElementById('specialContainer');
+                const specialStreamers = this.streamers.filter(s => s.isSpecial);
+                
+                if (specialStreamers.length === 0) {
+                    specialContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-heart"></i>
+                            <p>暂无特别关注的主播</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                
+                specialStreamers.forEach(streamer => {
+                    const isDrawn = this.currentRoundDrawn.includes(streamer.id);
+                    
+                    // 生成平台标签
+                    let platformTags = '';
+                    if (streamer.platforms && streamer.platforms.length > 0) {
+                        platformTags = streamer.platforms.map(p => {
+                            const platformIcon = this.getPlatformIcon(p.platform);
+                            const platformName = this.getPlatformName(p.platform);
+                            return `<span class="platform-tag">${platformIcon} ${platformName}</span>`;
+                        }).join('');
+                    }
+                    
+                    html += `
+                        <div class="list-item ${isDrawn ? 'drawn' : ''}">
+                            ${streamer.avatar ? 
+                                `<img src="${streamer.avatar}" alt="${streamer.name}" class="item-avatar">` : 
+                                `<div class="default-small-avatar"><i class="fas fa-user-circle"></i></div>`
+                            }
+                            <div class="item-info">
+                                <div class="item-name">${streamer.name} ${isDrawn ? '<span style="color: var(--danger-color); font-size: 0.8rem;">(已抽)</span>' : ''}</div>
+                                <div class="item-platforms">${platformTags}</div>
+                                <div style="font-size: 0.85rem; color: var(--primary-color); margin-top: 5px;">
+                                    概率加成: ${streamer.probability}x
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn" onclick="AppState.editStreamer(${streamer.id})" title="编辑">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-remove" onclick="AppState.deleteStreamer(${streamer.id})" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                specialContainer.innerHTML = html;
+            },
+            
+            // 渲染已抽取主播列表
+            renderDrawnList() {
+                const drawnContainer = document.getElementById('drawnContainer');
+                
+                // 获取已抽取的主播ID列表（当前轮次和历史记录）
+                const allDrawnIds = [...new Set([...this.currentRoundDrawn, ...this.drawnHistory.map(record => record.id)])];
+                
+                // 获取已抽取的主播详情
+                const drawnStreamers = this.streamers.filter(s => allDrawnIds.includes(s.id));
+                
+                // 按照抽取时间排序（如果有历史记录）
+                drawnStreamers.sort((a, b) => {
+                    const aRecord = this.drawnHistory.find(record => record.id === a.id);
+                    const bRecord = this.drawnHistory.find(record => record.id === b.id);
+                    
+                    if (!aRecord || !bRecord) return 0;
+                    
+                    return new Date(bRecord.timestamp) - new Date(aRecord.timestamp);
+                });
+                
+                if (drawnStreamers.length === 0) {
+                    drawnContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <p>暂无已抽取的主播</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                
+                drawnStreamers.forEach(streamer => {
+                    // 生成平台标签
+                    let platformTags = '';
+                    if (streamer.platforms && streamer.platforms.length > 0) {
+                        platformTags = streamer.platforms.map(p => {
+                            const platformIcon = this.getPlatformIcon(p.platform);
+                            const platformName = this.getPlatformName(p.platform);
+                            return `<span class="platform-tag">${platformIcon} ${platformName}</span>`;
+                        }).join('');
+                    } else {
+                        platformTags = '<span style="color: var(--warning-color); font-size: 0.85rem;">暂无平台信息</span>';
+                    }
+                    
+                    // 获取抽取时间
+                    const drawRecord = this.drawnHistory.find(record => record.id === streamer.id);
+                    const drawTime = drawRecord ? new Date(drawRecord.timestamp).toLocaleString() : '未知时间';
+                    
+                    html += `
+                        <div class="list-item drawn">
+                            ${streamer.avatar ? 
+                                `<img src="${streamer.avatar}" alt="${streamer.name}" class="item-avatar">` : 
+                                `<div class="default-small-avatar"><i class="fas fa-user-circle"></i></div>`
+                            }
+                            <div class="item-info">
+                                <div class="item-name">${streamer.name} <span style="color: var(--danger-color); font-size: 0.8rem;">(已抽)</span></div>
+                                <div class="item-platforms">${platformTags}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-color); opacity: 0.7; margin-top: 5px;">
+                                    抽取时间: ${drawTime}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="action-btn" onclick="AppState.editStreamer(${streamer.id})" title="编辑信息">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-remove" onclick="AppState.deleteStreamer(${streamer.id})" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                drawnContainer.innerHTML = html;
+            },
+            
+            // 更新已抽取主播列表（在抽卡后调用）
+            updateDrawnList() {
+                // 如果当前激活的是已抽取标签页，重新渲染
+                const activeTab = document.querySelector('.tab.active');
+                if (activeTab && activeTab.dataset.tab === 'drawn') {
+                    this.renderDrawnList();
+                }
+            },
+            
+            // 更新统计信息
+            updateStats() {
+                const totalCount = this.streamers.length;
+                const drawnCount = this.currentRoundDrawn.length;
+                const specialCount = this.streamers.filter(s => s.isSpecial).length;
+                const remainingCount = totalCount - drawnCount;
+                
+                document.getElementById('totalCount').textContent = totalCount;
+                document.getElementById('drawnCount').textContent = drawnCount;
+                document.getElementById('specialCount').textContent = specialCount;
+                document.getElementById('remainingCount').textContent = remainingCount;
+                
+                // 更新进度条
+                const progress = document.querySelector('.progress');
+                if (progress) {
+                    const percent = totalCount > 0 ? (drawnCount / totalCount) * 100 : 0;
+                    progress.style.width = `${percent}%`;
+                }
+            },
+            
+            // 获取平台名称
+            getPlatformName(platform) {
+                const platformNames = {
+                    'bilibili': 'Bilibili',
+                    'douyin': '抖音',
+                    'xiaohongshu': '小红书',
+                    'kuaishou': '快手',
+                    'other': '其他'
+                };
+                return platformNames[platform] || platform;
+            },
+            
+            // 获取平台图标
+            getPlatformIcon(platform) {
+                const platformIcons = {
+                    'bilibili': '<i class="fas fa-play-circle"></i>',
+                    'douyin': '<i class="fas fa-music"></i>',
+                    'xiaohongshu': '<i class="fas fa-book"></i>',
+                    'kuaishou': '<i class="fas fa-video"></i>',
+                    'other': '<i class="fas fa-globe"></i>'
+                };
+                return platformIcons[platform] || '<i class="fas fa-globe"></i>';
+            },
+            
+            // 获取平台颜色
+            getPlatformColor(platform) {
+                const platformColors = {
+                    'bilibili': 'var(--bilibili-color)',
+                    'douyin': 'var(--douyin-color)',
+                    'xiaohongshu': 'var(--xiaohongshu-color)',
+                    'kuaishou': 'var(--kuaishou-color)',
+                    'other': 'var(--secondary-color)'
+                };
+                return platformColors[platform] || 'var(--secondary-color)';
+            },
+            
+            // 显示Toast通知
+            showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                
+                // 设置颜色
+                let color = 'var(--primary-color)';
+                if (type === 'success') color = 'var(--success-color)';
+                if (type === 'warning') color = 'var(--warning-color)';
+                if (type === 'error') color = 'var(--danger-color)';
+                
+                toast.style.borderLeftColor = color;
+                
+                // 显示
+                toast.classList.add('show');
+                
+                // 3秒后隐藏
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        };
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            AppState.init();
+        });
+    </script>
+</body>
+</html>
